@@ -1,0 +1,342 @@
+asyncapi: '2.6.0'
+id: 'urn:com:superviz:realtime'
+info:
+  title: SuperViz Realtime Channels & Webhooks
+  version: '1.0.0'
+  description: |
+    AsyncAPI 2.6 description of SuperViz's genuinely event/channel-based
+    surfaces:
+
+    1. **Realtime channels** - SuperViz is a real-time synchronization platform.
+       Clients using `@superviz/sdk` / `@superviz/react-sdk` subscribe to named
+       channels and receive events. A backend publishes events into a channel by
+       issuing `POST https://api.superviz.com/realtime/1.0/channels/{channel}/events`
+       (modeled in the companion OpenAPI at `openapi/superviz-openapi.yml`); this
+       AsyncAPI models the resulting channel event delivery.
+
+    2. **Outbound webhooks** - When configured, SuperViz POSTs event
+       notifications to a receiver you host (for example `MEETING_STATS` when a
+       video meeting ends, plus recording-ready and transcription-ready events).
+
+    This document models the message shapes for both. The underlying client
+    transport for realtime channels is a managed WebSocket connection handled by
+    the SuperViz SDK; SuperViz does not publish a raw public WebSocket endpoint,
+    so the channel is described here at the logical event level. Webhook
+    delivery is an HTTP POST to a customer-hosted receiver.
+  contact:
+    name: API Evangelist
+    email: kin@apievangelist.com
+    url: https://apievangelist.com
+  license:
+    name: SuperViz Terms of Service
+    url: https://superviz.com/terms
+  x-transport-notes:
+    realtimeChannels:
+      publishedVia: 'POST https://api.superviz.com/realtime/1.0/channels/{channel}/events'
+      deliveredVia: Managed WebSocket via the SuperViz SDK (no raw public WebSocket endpoint documented)
+      direction: server-to-client fan-out
+    webhooks:
+      transport: HTTP POST to a customer-hosted receiver
+      configuredIn: Dashboard > Developer (webhook receiver URL)
+      source: https://docs.superviz.com/video-sdk/webhooks/meeting-stats
+defaultContentType: application/json
+servers:
+  realtime:
+    url: api.superviz.com/realtime/1.0
+    protocol: https
+    description: |
+      SuperViz realtime service. Events are published to a channel with
+      `POST /channels/{channel}/events` and fanned out to subscribed SDK
+      clients. AsyncAPI 2.6 has no dedicated identifier for the SDK-managed
+      WebSocket delivery, so `https` is used and the transport is documented in
+      `info.x-transport-notes`.
+    security:
+      - clientSecret: []
+channels:
+  realtime/{channel}:
+    description: |
+      A named realtime channel. A backend publishes events to it via the REST
+      publish endpoint; subscribed SDK clients receive `ChannelEvent` messages.
+      `PresenceUpdate` messages are emitted as participants join or leave.
+    parameters:
+      channel:
+        description: The realtime channel name.
+        schema:
+          type: string
+    subscribe:
+      operationId: onChannelEvent
+      summary: Receive events published to a channel.
+      description: |
+        Delivered to SDK clients subscribed to the channel. Carries either a
+        user-published event (`ChannelEvent`) or a presence change
+        (`PresenceUpdate`).
+      message:
+        oneOf:
+          - $ref: '#/components/messages/ChannelEvent'
+          - $ref: '#/components/messages/PresenceUpdate'
+  webhooks/meeting-stats:
+    description: |
+      Outbound webhook SuperViz POSTs to your receiver when a video meeting ends
+      and statistics are available (`MEETING_STATS`), plus recording-ready and
+      transcription-ready notifications.
+    subscribe:
+      operationId: onWebhookEvent
+      summary: Receive SuperViz outbound webhook notifications.
+      bindings:
+        http:
+          type: request
+          method: POST
+          bindingVersion: '0.3.0'
+      message:
+        oneOf:
+          - $ref: '#/components/messages/MeetingStatsWebhook'
+          - $ref: '#/components/messages/RecordingReadyWebhook'
+          - $ref: '#/components/messages/TranscriptionReadyWebhook'
+components:
+  securitySchemes:
+    clientSecret:
+      type: httpApiKey
+      in: header
+      name: secret
+      description: |
+        SuperViz Secret Key (paired with the `client_id` header) used to
+        authenticate the REST publish request that drives channel events.
+  messages:
+    ChannelEvent:
+      name: ChannelEvent
+      title: Realtime channel event
+      summary: An event published to a channel and fanned out to subscribers.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ChannelEvent'
+      examples:
+        - name: priceUpdate
+          payload:
+            name: price-update
+            channel: my-channel
+            data:
+              symbol: ACME
+              price: 42.5
+            timestamp: 1751328000000
+    PresenceUpdate:
+      name: PresenceUpdate
+      title: Presence update
+      summary: Emitted when a participant joins or leaves the channel.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/PresenceUpdate'
+      examples:
+        - name: joined
+          payload:
+            type: participant.joined
+            channel: my-channel
+            participant:
+              id: user-123
+              name: Ada Lovelace
+              connectionId: conn_01habc
+              timestamp: 1751328000000
+    MeetingStatsWebhook:
+      name: MeetingStatsWebhook
+      title: MEETING_STATS webhook
+      summary: Delivered when a meeting ends and statistics are available.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/MeetingStatsWebhook'
+      examples:
+        - name: meetingStats
+          payload:
+            type: MEETING_STATS
+            message:
+              - uuid: mtg_01hxyz
+                meetingId: meeting-01hxyz
+                groupId: group-1
+                startedAt: '2026-07-01T14:00:00Z'
+                endedAt: '2026-07-01T14:32:00Z'
+                meetingMinutes: 32
+                recordingMinutes: 32
+                price: 0.64
+                participants:
+                  - uuid: p_1
+                    name: Ada Lovelace
+                    userId: user-123
+                    permission: host
+                    joinedAt: '2026-07-01T14:00:05Z'
+    RecordingReadyWebhook:
+      name: RecordingReadyWebhook
+      title: Recording ready webhook
+      summary: Delivered when a meeting recording has finished processing.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RecordingReadyWebhook'
+      examples:
+        - name: recordingReady
+          payload:
+            type: RECORDING
+            message:
+              meetingId: meeting-01hxyz
+              recordingId: rec_01hxyz
+              url: https://recordings.superviz.com/rec_01hxyz.mp4
+              durationMinutes: 32
+    TranscriptionReadyWebhook:
+      name: TranscriptionReadyWebhook
+      title: Transcription ready webhook
+      summary: Delivered when a meeting transcription / AI insight is available.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/TranscriptionReadyWebhook'
+      examples:
+        - name: transcriptionReady
+          payload:
+            type: TRANSCRIPTION
+            message:
+              meetingId: meeting-01hxyz
+              transcriptionId: tr_01hxyz
+              language: en
+              url: https://recordings.superviz.com/tr_01hxyz.json
+  schemas:
+    ChannelEvent:
+      type: object
+      required:
+        - name
+        - channel
+        - data
+      properties:
+        name:
+          type: string
+          description: The event name subscribers listen for.
+        channel:
+          type: string
+          description: The channel the event was published to.
+        data:
+          description: Arbitrary JSON payload delivered to subscribers.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (milliseconds) of publication.
+    PresenceUpdate:
+      type: object
+      required:
+        - type
+        - channel
+        - participant
+      properties:
+        type:
+          type: string
+          enum:
+            - participant.joined
+            - participant.left
+          description: Whether the participant joined or left the channel.
+        channel:
+          type: string
+        participant:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            connectionId:
+              type: string
+              nullable: true
+            timestamp:
+              type: integer
+              format: int64
+          required:
+            - id
+    MeetingStatsWebhook:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+          enum:
+            - MEETING_STATS
+        message:
+          type: array
+          description: Array of meeting statistics objects.
+          items:
+            type: object
+            properties:
+              uuid:
+                type: string
+              meetingId:
+                type: string
+              groupId:
+                type: string
+                nullable: true
+              startedAt:
+                type: string
+                format: date-time
+              endedAt:
+                type: string
+                format: date-time
+                nullable: true
+              meetingMinutes:
+                type: number
+              recordingMinutes:
+                type: number
+              price:
+                type: number
+              participants:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    uuid:
+                      type: string
+                    name:
+                      type: string
+                    userId:
+                      type: string
+                      nullable: true
+                    permission:
+                      type: string
+                    joinedAt:
+                      type: string
+                      format: date-time
+    RecordingReadyWebhook:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+          enum:
+            - RECORDING
+        message:
+          type: object
+          properties:
+            meetingId:
+              type: string
+            recordingId:
+              type: string
+            url:
+              type: string
+              format: uri
+            durationMinutes:
+              type: number
+    TranscriptionReadyWebhook:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+          enum:
+            - TRANSCRIPTION
+        message:
+          type: object
+          properties:
+            meetingId:
+              type: string
+            transcriptionId:
+              type: string
+            language:
+              type: string
+            url:
+              type: string
+              format: uri

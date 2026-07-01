@@ -1,0 +1,202 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SuperViz REST API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "apikey": [
+        {
+          "key": "client_id",
+          "value": "{{client_id}}",
+          "in": "header"
+        },
+        {
+          "key": "secret",
+          "value": "{{secret}}",
+          "in": "header"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Presence",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get participants connected to a channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.superviz.com/realtime/1.0/participants/:channel",
+            "params": [
+              {
+                "name": "channel",
+                "value": "my-channel",
+                "type": "path",
+                "description": "The name of the realtime channel to query."
+              }
+            ]
+          },
+          "docs": "Returns the list of participants currently connected to the named realtime channel."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Channels",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List realtime channels",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.superviz.com/realtime/1.0/channels"
+          },
+          "docs": "Lists the realtime channels active for the authenticated account or room."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Realtime",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Publish an event to a channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.superviz.com/realtime/1.0/channels/:channel/events",
+            "params": [
+              {
+                "name": "channel",
+                "value": "my-channel",
+                "type": "path",
+                "description": "The name of the realtime channel to publish to."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"price-update\",\n  \"data\": {\n    \"symbol\": \"ACME\",\n    \"price\": 42.5\n  }\n}"
+            }
+          },
+          "docs": "Publishes an event with an arbitrary JSON payload to the named realtime channel; subscribed SDK clients receive it in real time."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Rooms",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get participants in a collaboration room",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.superviz.com/rooms/:roomId/participants",
+            "params": [
+              {
+                "name": "roomId",
+                "value": "room-abc",
+                "type": "path",
+                "description": "The identifier of the collaboration room."
+              },
+              {
+                "name": "limit",
+                "value": "50",
+                "type": "query",
+                "description": "Maximum number of participants to return per page."
+              },
+              {
+                "name": "startAfter",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor - return participants after this participant id."
+              }
+            ]
+          },
+          "docs": "Returns the participants associated with a collaboration room, with cursor-style pagination."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Comments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List contextual comments for a room",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.superviz.com/rooms/:roomId/comments",
+            "params": [
+              {
+                "name": "roomId",
+                "value": "room-abc",
+                "type": "path",
+                "description": "The identifier of the collaboration room."
+              },
+              {
+                "name": "limit",
+                "value": "50",
+                "type": "query",
+                "description": "Maximum number of comments to return per page."
+              }
+            ]
+          },
+          "docs": "Returns the contextual comments (annotations) created through the Collaboration SDK for the given room."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Meetings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get video meeting statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.superviz.com/meetings/:meetingId",
+            "params": [
+              {
+                "name": "meetingId",
+                "value": "meeting-01hxyz",
+                "type": "path",
+                "description": "The identifier of the meeting."
+              }
+            ]
+          },
+          "docs": "Retrieves statistics for a video huddle / meeting created with the Video SDK."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+aid: superviz
+name: SuperViz
+review:
+  question: Does SuperViz expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-01'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: true
+  asyncapiScopeNote: |
+    SuperViz is a real-time synchronization platform, so its client transport is
+    a managed WebSocket connection - but that socket is handled inside the
+    SuperViz SDK (@superviz/sdk, @superviz/react-sdk) and no raw public
+    WebSocket endpoint (ws:// or wss:// URL) is documented for developers to
+    connect to directly. Per updated API Evangelist scope, the event/channel
+    surface is still in-scope for AsyncAPI modeling. An AsyncAPI 2.6 document was
+    authored at asyncapi/superviz-asyncapi.yml describing (a) realtime channel
+    events fanned out to SDK subscribers after a backend publishes via the REST
+    endpoint, and (b) SuperViz's outbound HTTP webhooks. The transport is
+    documented explicitly so the SDK-managed socket is never misrepresented as a
+    public WebSocket API.
+findings:
+  summary: |
+    SuperViz does not publish a documented public WebSocket endpoint. The
+    product is SDK-first: presence, realtime data channels, video huddle,
+    contextual comments, and mouse pointers are implemented client-side with the
+    SuperViz SDK, initialized with a developer key. Real-time delivery to
+    clients runs over a WebSocket connection that the SDK manages internally;
+    developers do not receive or connect to a raw ws:// / wss:// URL.
+
+    The documented server-side surface is a REST API at
+    https://api.superviz.com, authenticated with client_id and secret headers
+    (Client ID + Secret Key from Dashboard > Developer > Keys). It covers
+    presence/participants, channels, publishing events to a channel, room
+    participants, contextual comments, and video meeting statistics. Backends
+    push synchronized data by POSTing an event to a realtime channel over REST;
+    the SDK then delivers it to subscribers. SuperViz also POSTs outbound
+    webhooks (MEETING_STATS, recording, transcription) to a customer-hosted
+    receiver.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.superviz.com
+      documented: true
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: >-
+        Realtime delivery uses a WebSocket transport, but it is established and
+        managed inside the SuperViz SDK. No public WebSocket URL or protocol is
+        documented for direct developer use.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Outbound HTTP POST notifications to a customer-configured receiver.
+  endpointsConfirmedRest:
+    - GET  https://api.superviz.com/realtime/1.0/participants/{channel}
+    - GET  https://api.superviz.com/realtime/1.0/channels
+    - POST https://api.superviz.com/realtime/1.0/channels/{channel}/events (publish message to channel)
+    - GET  https://api.superviz.com/rooms/{roomId}/participants (Collaboration REST - Room)
+    - GET  https://api.superviz.com/rooms/{roomId}/comments (Collaboration REST - Contextual Comments)
+    - GET  https://api.superviz.com/meetings/{meetingId} (Video meeting statistics)
+  authentication:
+    developerKey: Initializes the client SDK (DEVELOPER_KEY).
+    restHeaders:
+      - client_id
+      - secret
+    keySource: Dashboard > Developer > Keys (Secret shown only once).
+sources:
+  - url: https://docs.superviz.com/
+    type: Documentation
+    note: Product overview - Video SDK, Real-time, and Collaboration; SDK-first with a supporting REST API.
+  - url: https://docs.superviz.com/realtime/1.0/rest-api/presence
+    type: APIReference
+    note: GET /realtime/1.0/participants/{channel}; client_id + secret headers; JSON array of participants.
+  - url: https://docs.superviz.com/realtime/1.0/rest-api/publish-message-to-channel
+    type: APIReference
+    note: Post event / publish a message to a realtime channel from a backend.
+  - url: https://docs.superviz.com/collaboration/rest-api/how-to-use
+    type: Documentation
+    note: Collaboration REST API base https://api.superviz.com with client_id/secret; Room and Contextual Comments; pagination.
+  - url: https://docs.superviz.com/video-sdk/webhooks/meeting-stats
+    type: Documentation
+    note: MEETING_STATS webhook plus recording and transcription webhooks; outbound HTTP POST, not WebSocket.
+  - url: https://github.com/SuperViz
+    type: SourceCode
+    note: SuperViz GitHub org; superviz SDK is the primary TypeScript product, archived sdk repo is the legacy collaboration SDK.
+actions:
+  asyncapiPath: asyncapi/superviz-asyncapi.yml
+  apisYmlUpdated: true
+  reason: |
+    No public WebSocket endpoint is documented. An AsyncAPI 2.6 document was
+    authored for the genuinely event/channel-based surfaces - realtime channel
+    events and outbound webhooks - with the SDK-managed WebSocket and
+    HTTP-POST-webhook transports documented in info.x-transport-notes and per
+    server/channel so neither is misrepresented as a public WebSocket API.

@@ -1,0 +1,62 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: SuperViz
+providerId: superviz
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- Real Time
+- Collaboration
+- Presence
+- Synchronization
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  SuperViz meters usage primarily through plan allowances - monthly active
+  users / concurrent connections, realtime messages per month, and video /
+  recording minutes - rather than fixed per-second REST rate limits. Server-side
+  REST calls (presence, channels, publish event, rooms, comments, meetings)
+  authenticated with client_id / secret are subject to standard abuse
+  protection. Specific per-endpoint request-per-second limits are not published
+  and are not reconciled in this artifact.
+notes: >-
+  Confirm concurrent-connection ceilings, message-rate caps, and any per-endpoint
+  REST throttling with SuperViz support or the plan you are on during
+  reconciliation. Clients should treat 429 responses as retryable with backoff.
+sources:
+- https://docs.superviz.com
+- https://superviz.com/pricing
+responseCodes:
+  throttled: 429
+limits:
+- name: Concurrent Connections
+  scope: account
+  metric: connections
+  limit: see plan allowance
+  notes: Bounded by MAU / concurrent-connection allowance of the active plan.
+- name: Realtime Messages
+  scope: account
+  metric: messages
+  limit: see plan allowance
+  notes: Monthly realtime message allowance per plan; overage billed on paid tiers.
+- name: Video Meeting Minutes
+  scope: account
+  metric: minutes
+  limit: see plan allowance
+  notes: Participant-minutes of video huddle, metered per plan.
+- name: REST Requests
+  scope: account
+  metric: requests
+  limit: see provider documentation
+  notes: Server-side REST endpoints share standard abuse-protection throttling; specific per-second caps are not published.
+policies:
+- name: Plan Allowances
+  description: Limits are set by the account's plan (Free / Pro / Enterprise) and raised via upgrades or enterprise agreements.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter on 429 responses and honor any Retry-After header.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

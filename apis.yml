@@ -1,0 +1,183 @@
+aid: superviz
+url: https://raw.githubusercontent.com/api-evangelist/superviz/refs/heads/main/apis.yml
+name: SuperViz
+kind: company
+description: SuperViz provides real-time collaboration and data-synchronization infrastructure
+  for web applications - presence, realtime data channels, video huddle/meetings,
+  contextual comments, and mouse pointers. The product is SDK-first (@superviz/sdk
+  and @superviz/react-sdk initialized with a developer key), supported by a REST API
+  at api.superviz.com for participants, presence, channels, rooms, comments, and
+  meetings, an event-driven realtime channel API, and webhooks.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Real Time
+- Collaboration
+- Presence
+- Synchronization
+- Video
+- WebRTC
+- SDK
+created: '2026-07-01'
+modified: '2026-07-01'
+specificationVersion: '0.19'
+apis:
+- aid: superviz:superviz-participants-api
+  name: SuperViz Participants API
+  tags:
+  - Participants
+  - Presence
+  - Real Time
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.superviz.com/realtime/1.0/rest-api/presence
+  baseURL: https://api.superviz.com
+  properties:
+  - url: https://docs.superviz.com/realtime/1.0/rest-api/presence
+    type: Documentation
+  - url: https://docs.superviz.com/realtime/1.0/rest-api/presence
+    type: APIReference
+  - url: openapi/superviz-openapi.yml
+    type: OpenAPI
+  description: Server-side REST endpoint that returns the list of participants currently
+    connected to a given realtime channel, authenticated with the client_id and
+    secret developer keys.
+- aid: superviz:superviz-channels-api
+  name: SuperViz Channels API
+  tags:
+  - Channels
+  - Real Time
+  - Presence
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.superviz.com/realtime/1.0/rest-api/channels
+  baseURL: https://api.superviz.com
+  properties:
+  - url: https://docs.superviz.com/realtime/1.0/rest-api/channels
+    type: Documentation
+  - url: openapi/superviz-openapi.yml
+    type: OpenAPI
+  description: Lists the realtime channels active for a room, used to introspect where
+    presence and messages are flowing across a collaborative application.
+- aid: superviz:superviz-realtime-data-api
+  name: SuperViz Realtime Data API
+  tags:
+  - Real Time
+  - Events
+  - Pub Sub
+  - Synchronization
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.superviz.com/realtime/1.0/rest-api/publish-message-to-channel
+  baseURL: https://api.superviz.com
+  properties:
+  - url: https://docs.superviz.com/realtime/1.0/rest-api/publish-message-to-channel
+    type: Documentation
+  - url: openapi/superviz-openapi.yml
+    type: OpenAPI
+  - url: asyncapi/superviz-asyncapi.yml
+    type: AsyncAPI
+  description: Publish (post) events with an arbitrary JSON payload to a named realtime
+    channel from a backend, so servers can push synchronized data to connected SDK
+    clients. The channel/event model is described as AsyncAPI alongside the REST
+    publish endpoint.
+- aid: superviz:superviz-rooms-api
+  name: SuperViz Rooms API
+  tags:
+  - Rooms
+  - Collaboration
+  - Participants
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.superviz.com/collaboration/rest-api/how-to-use
+  baseURL: https://api.superviz.com
+  properties:
+  - url: https://docs.superviz.com/collaboration/rest-api/how-to-use
+    type: Documentation
+  - url: openapi/superviz-openapi.yml
+    type: OpenAPI
+  description: Collaboration REST surface for rooms - retrieve a room's participants
+    and related collaboration context, with cursor-style pagination on list responses.
+- aid: superviz:superviz-comments-api
+  name: SuperViz Contextual Comments API
+  tags:
+  - Comments
+  - Annotations
+  - Collaboration
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.superviz.com/collaboration/rest-api/how-to-use
+  baseURL: https://api.superviz.com
+  properties:
+  - url: https://docs.superviz.com/collaboration/rest-api/how-to-use
+    type: Documentation
+  - url: openapi/superviz-openapi.yml
+    type: OpenAPI
+  description: Reads the contextual comments (annotations pinned to elements of a web
+    app or 3D scene) created through the Collaboration SDK, exposed server-side over
+    REST for backend workflows.
+- aid: superviz:superviz-meetings-api
+  name: SuperViz Meetings API
+  tags:
+  - Video
+  - Meetings
+  - Huddle
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.superviz.com/video-sdk/webhooks/meeting-stats
+  baseURL: https://api.superviz.com
+  properties:
+  - url: https://docs.superviz.com/video-sdk/webhooks/meeting-stats
+    type: Documentation
+  - url: openapi/superviz-openapi.yml
+    type: OpenAPI
+  description: Retrieves video meeting (huddle) statistics - duration, minutes, price,
+    recordings, and per-participant join detail - for meetings created with the
+    Video SDK.
+- aid: superviz:superviz-webhooks-api
+  name: SuperViz Webhooks API
+  tags:
+  - Webhooks
+  - Events
+  - Notifications
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.superviz.com/video-sdk/webhooks/meeting-stats
+  baseURL: https://api.superviz.com
+  properties:
+  - url: https://docs.superviz.com/video-sdk/webhooks/meeting-stats
+    type: Documentation
+  - url: openapi/superviz-openapi.yml
+    type: OpenAPI
+  - url: asyncapi/superviz-asyncapi.yml
+    type: AsyncAPI
+  description: Outbound webhook notifications SuperViz POSTs to a preconfigured receiver
+    when events occur - meeting stats available (MEETING_STATS), recording ready,
+    and transcription ready. Modeled as AsyncAPI event messages.
+- aid: superviz:superviz-authentication-api
+  name: SuperViz Authentication API
+  tags:
+  - Authentication
+  - Keys
+  - Tokens
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.superviz.com/getting-started/setting-up-your-account
+  baseURL: https://api.superviz.com
+  properties:
+  - url: https://docs.superviz.com/getting-started/setting-up-your-account
+    type: Documentation
+  - url: openapi/superviz-openapi.yml
+    type: OpenAPI
+  description: Credential model for SuperViz - a developer key initializes the client
+    SDK, while a Client ID plus Secret Key pair (from Dashboard > Developer > Keys)
+    authenticates all server-side REST requests via client_id and secret headers.
+common:
+- type: GitHubOrganization
+  url: https://github.com/SuperViz
+- type: LinkedIn
+  url: https://www.linkedin.com/company/superviz
+- type: Website
+  url: https://superviz.com/
+- type: Documentation
+  url: https://docs.superviz.com
+- type: Plans
+  url: plans/superviz-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/superviz-rate-limits.yml
+- type: FinOps
+  url: finops/superviz-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

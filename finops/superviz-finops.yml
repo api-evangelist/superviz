@@ -1,0 +1,105 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: SuperViz
+providerId: superviz
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- Real Time
+- Collaboration
+- Presence
+- Synchronization
+- Video
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of SuperViz spend. SuperViz bills a tiered subscription (Free /
+  Pro / Enterprise) plus usage-based metering across monthly active users /
+  concurrent connections, realtime messages, video meeting participant-minutes,
+  and recording minutes. AI meeting insights and recording add per-minute
+  charges on paid tiers. Because the platform is SDK-first, the main cost
+  drivers are how many users connect, how chatty the realtime channels are, and
+  how much video / recording is produced.
+notes: >-
+  Specific unit prices are not published in this artifact; verify against the
+  SuperViz pricing page during reconciliation.
+sources:
+- https://superviz.com/pricing
+- https://docs.superviz.com
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: SuperViz
+serviceCategory: Developer Tools and Collaboration
+billingModel:
+  pricingCategory: Subscription and Usage-Based
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: SuperViz
+  ServiceCategory: Developer Tools and Collaboration
+  ProviderName: SuperViz
+  PublisherName: SuperViz
+  InvoiceIssuerName: SuperViz
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: monthly_active_users
+  description: Monthly active users / concurrent connections against the plan allowance.
+  unit: users
+  aggregation: sum
+  dimensions:
+  - account
+  - plan
+- name: realtime_messages
+  description: Realtime channel messages published / delivered, billed per plan allowance and overage.
+  unit: messages
+  aggregation: sum
+  dimensions:
+  - account
+  - channel
+- name: meeting_minutes
+  description: Video huddle participant-minutes.
+  unit: minutes
+  aggregation: sum
+  dimensions:
+  - account
+  - meeting
+- name: recording_minutes
+  description: Minutes of meeting recording produced.
+  unit: minutes
+  aggregation: sum
+  dimensions:
+  - account
+  - meeting
+- name: ai_insight_minutes
+  description: Minutes of AI meeting insights / transcription processed.
+  unit: minutes
+  aggregation: sum
+  dimensions:
+  - account
+  - meeting
+principles:
+- name: Visibility
+  description: Track MAU, realtime message volume, and video/recording minutes from the SuperViz dashboard.
+- name: Allocation
+  description: Tag rooms / channels per feature or team; map connection and message burn to cost centers.
+- name: Optimization
+  description: Scope channels tightly and batch realtime updates to cut message volume; enable recording and AI insights only where needed.
+- name: Accountability
+  description: Assign owners per application; review MAU and video minutes monthly against the plan allowance and budget.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,145 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: SuperViz
+providerId: superviz
+created: '2026-07-01'
+modified: '2026-07-01'
+reconciled: false
+tags:
+- Real Time
+- Collaboration
+- Presence
+- Synchronization
+- Video
+- Plans
+description: >-
+  SuperViz packages its real-time collaboration platform into tiered plans plus
+  usage-based metering. A free tier lets developers build and test with a
+  monthly allowance of monthly active users (MAU) / connections and realtime
+  messages; paid tiers raise those allowances and add video meeting minutes,
+  recording, and AI meeting insights. Video and recording are metered per
+  minute and enterprise agreements are available. Specific published prices are
+  not reconciled in this artifact - verify on the SuperViz pricing page.
+notes: >-
+  SuperViz is SDK-first; billing is driven by connections / MAU, realtime
+  messages, and video/recording minutes rather than per-API-call token rates.
+  Confirm current tier names, allowances, and prices on the pricing page during
+  reconciliation.
+sources:
+- https://superviz.com/pricing
+- https://docs.superviz.com/getting-started/setting-up-your-account
+plans:
+- id: superviz-free
+  name: Free
+  type: free
+  description: >-
+    Free developer tier for building and testing collaboration and realtime
+    features, with a monthly allowance of active users, connections, and
+    realtime messages.
+  entries:
+  - label: Monthly Active Users
+    name: mau
+    type: quota
+    metric: users
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included up to plan allowance
+    userMultiplied: true
+  - label: Realtime Messages
+    name: realtime_messages
+    type: quota
+    metric: messages
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included up to plan allowance
+    userMultiplied: false
+  elements:
+  - name: Presence
+  - name: Realtime Data
+  - name: Contextual Comments
+  - name: Mouse Pointers
+- id: superviz-pro
+  name: Pro
+  type: paid
+  description: >-
+    Paid tier with higher MAU / connection and message allowances plus video
+    huddle, recording, and AI meeting insights, billed as a base subscription
+    with usage-based overages.
+  entries:
+  - label: Monthly Active Users
+    name: mau
+    type: usage
+    metric: users
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: base allowance included; overage per additional MAU
+    userMultiplied: true
+  - label: Realtime Messages
+    name: realtime_messages
+    type: usage
+    metric: messages
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000000
+    price: base allowance included; overage per 1M messages
+    userMultiplied: false
+  - label: Video Meeting Minutes
+    name: meeting_minutes
+    type: usage
+    metric: minutes
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: per participant-minute
+    userMultiplied: true
+  - label: Recording Minutes
+    name: recording_minutes
+    type: usage
+    metric: minutes
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: per recorded minute
+    userMultiplied: false
+  elements:
+  - name: Presence
+  - name: Realtime Data
+  - name: Video Huddle
+  - name: Recording
+  - name: AI Meeting Insights
+  - name: Contextual Comments
+- id: superviz-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Volume commitments, higher limits, SSO, dedicated support, and negotiated
+    terms. Contact SuperViz sales.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Volume Pricing
+  - name: SSO
+  - name: Dedicated Support
+  - name: SLA
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,307 @@
+{
+  "info": {
+    "name": "SuperViz REST API",
+    "description": {
+      "content": "Representative Postman collection for the SuperViz server-side REST API at https://api.superviz.com. All requests authenticate with the client_id and secret headers (Client ID + Secret Key from Dashboard > Developer > Keys).",
+      "type": "text/plain"
+    },
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "client_id"
+      },
+      {
+        "key": "value",
+        "value": "{{client_id}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.superviz.com"
+    },
+    {
+      "key": "client_id",
+      "value": ""
+    },
+    {
+      "key": "secret",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Presence",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "name": "Get participants connected to a channel",
+          "request": {
+            "name": "Get participants connected to a channel",
+            "description": {
+              "content": "Returns the list of participants currently connected to the named realtime channel.",
+              "type": "text/plain"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/realtime/1.0/participants/:channel",
+              "host": ["{{baseUrl}}"],
+              "path": ["realtime", "1.0", "participants", ":channel"],
+              "variable": [
+                {
+                  "key": "channel",
+                  "value": "my-channel",
+                  "description": "The name of the realtime channel to query."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "client_id",
+                "value": "{{client_id}}"
+              },
+              {
+                "key": "secret",
+                "value": "{{secret}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Channels",
+      "item": [
+        {
+          "name": "List realtime channels",
+          "request": {
+            "name": "List realtime channels",
+            "description": {
+              "content": "Lists the realtime channels active for the authenticated account or room.",
+              "type": "text/plain"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/realtime/1.0/channels",
+              "host": ["{{baseUrl}}"],
+              "path": ["realtime", "1.0", "channels"]
+            },
+            "header": [
+              {
+                "key": "client_id",
+                "value": "{{client_id}}"
+              },
+              {
+                "key": "secret",
+                "value": "{{secret}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Realtime",
+      "item": [
+        {
+          "name": "Publish an event to a channel",
+          "request": {
+            "name": "Publish an event to a channel",
+            "description": {
+              "content": "Publishes an event with an arbitrary JSON payload to the named realtime channel; subscribed SDK clients receive it in real time.",
+              "type": "text/plain"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/realtime/1.0/channels/:channel/events",
+              "host": ["{{baseUrl}}"],
+              "path": ["realtime", "1.0", "channels", ":channel", "events"],
+              "variable": [
+                {
+                  "key": "channel",
+                  "value": "my-channel",
+                  "description": "The name of the realtime channel to publish to."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "client_id",
+                "value": "{{client_id}}"
+              },
+              {
+                "key": "secret",
+                "value": "{{secret}}"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"price-update\",\n  \"data\": {\n    \"symbol\": \"ACME\",\n    \"price\": 42.5\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "Get participants in a collaboration room",
+          "request": {
+            "name": "Get participants in a collaboration room",
+            "description": {
+              "content": "Returns the participants associated with a collaboration room, with cursor-style pagination.",
+              "type": "text/plain"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/:roomId/participants?limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", ":roomId", "participants"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Maximum number of participants to return per page."
+                },
+                {
+                  "key": "startAfter",
+                  "value": "",
+                  "description": "Pagination cursor - return participants after this participant id.",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "roomId",
+                  "value": "room-abc",
+                  "description": "The identifier of the collaboration room."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "client_id",
+                "value": "{{client_id}}"
+              },
+              {
+                "key": "secret",
+                "value": "{{secret}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "List contextual comments for a room",
+          "request": {
+            "name": "List contextual comments for a room",
+            "description": {
+              "content": "Returns the contextual comments (annotations) created through the Collaboration SDK for the given room.",
+              "type": "text/plain"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/:roomId/comments?limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", ":roomId", "comments"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Maximum number of comments to return per page."
+                }
+              ],
+              "variable": [
+                {
+                  "key": "roomId",
+                  "value": "room-abc",
+                  "description": "The identifier of the collaboration room."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "client_id",
+                "value": "{{client_id}}"
+              },
+              {
+                "key": "secret",
+                "value": "{{secret}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Meetings",
+      "item": [
+        {
+          "name": "Get video meeting statistics",
+          "request": {
+            "name": "Get video meeting statistics",
+            "description": {
+              "content": "Retrieves statistics for a video huddle / meeting created with the Video SDK.",
+              "type": "text/plain"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/meetings/:meetingId",
+              "host": ["{{baseUrl}}"],
+              "path": ["meetings", ":meetingId"],
+              "variable": [
+                {
+                  "key": "meetingId",
+                  "value": "meeting-01hxyz",
+                  "description": "The identifier of the meeting."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "client_id",
+                "value": "{{client_id}}"
+              },
+              {
+                "key": "secret",
+                "value": "{{secret}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
