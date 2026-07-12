@@ -181,3 +181,11 @@ common:
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+
+common:
+  - type: DomainSecurity
+    url: security/superviz-domain-security.yml
+  - type: Authentication
+    url: authentication/superviz-authentication.yml
+  - url: https://superviz.com/blog
+    type: Blog

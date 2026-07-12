@@ -1,0 +1,25 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/superviz-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: clientId
+  type: apiKey
+  in: header
+  parameter: client_id
+  description: Client ID issued from the SuperViz Dashboard under Developer > Keys. Sent on
+    every REST request alongside the `secret` header.
+  sources:
+  - openapi/superviz-openapi.yml
+- name: secret
+  type: apiKey
+  in: header
+  parameter: secret
+  description: Secret Key issued from the SuperViz Dashboard under Developer > Keys. Displayed
+    only once at creation; store it securely and never commit it to version control.
+  sources:
+  - openapi/superviz-openapi.yml
