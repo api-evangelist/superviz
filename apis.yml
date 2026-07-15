@@ -183,6 +183,8 @@ maintainers:
   email: kin@apievangelist.com
 
 common:
+  - type: AgenticAccess
+    url: agentic-access/superviz-agentic-access.yml
   - type: DomainSecurity
     url: security/superviz-domain-security.yml
   - type: Authentication
