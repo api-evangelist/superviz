@@ -1,0 +1,152 @@
+openapi: 3.0.3
+info:
+  title: SuperViz REST Channels Rooms API
+  description: 'Representative OpenAPI description of the SuperViz server-side REST API.
+
+
+    SuperViz is SDK-first: real-time collaboration and communication features (presence, realtime data channels, video huddle, contextual comments, mouse pointers) are implemented in the browser with the `@superviz/sdk` and `@superviz/react-sdk` client libraries, initialized with a developer key.
+
+
+    This REST API at `https://api.superviz.com` is the supporting server-side surface. It lets a backend read presence and participants, introspect channels, publish events into realtime channels, read room participants and contextual comments, and retrieve video meeting statistics. All REST requests authenticate with a Client ID and Secret Key issued from Dashboard > Developer > Keys, sent as the `client_id` and `secret` request headers.
+
+
+    Endpoints, paths, and field shapes here are modeled from the public SuperViz documentation at https://docs.superviz.com and are intended as a faithful, representative specification rather than an exhaustive dump of every field.'
+  version: '1.0'
+  contact:
+    name: SuperViz Support
+    url: https://docs.superviz.com
+  license:
+    name: SuperViz Terms of Service
+    url: https://superviz.com/terms
+servers:
+- url: https://api.superviz.com
+  description: SuperViz REST API base URL
+security:
+- clientId: []
+  secret: []
+tags:
+- name: Rooms
+  description: Collaboration rooms and their participants.
+paths:
+  /rooms/{roomId}/participants:
+    get:
+      operationId: getRoomParticipants
+      tags:
+      - Rooms
+      summary: Get participants in a collaboration room
+      description: Returns the participants associated with a collaboration room. List responses use cursor-style pagination via the `limit` and `startAfter` query parameters.
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        description: The identifier of the collaboration room.
+        schema:
+          type: string
+        example: room-abc
+      - name: limit
+        in: query
+        required: false
+        description: Maximum number of participants to return per page.
+        schema:
+          type: integer
+          default: 50
+          minimum: 1
+          maximum: 100
+      - name: startAfter
+        in: query
+        required: false
+        description: Pagination cursor - return participants after this participant id.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A paginated list of room participants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedParticipants'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    PaginatedParticipants:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Participant'
+        limit:
+          type: integer
+        next:
+          type: string
+          nullable: true
+          description: Cursor to pass as `startAfter` to fetch the next page, or null.
+      required:
+      - data
+    Participant:
+      type: object
+      description: A participant connected to a realtime channel.
+      properties:
+        id:
+          type: string
+          description: Participant identifier supplied when the SDK was initialized.
+        name:
+          type: string
+          description: Display name of the participant.
+        connectionId:
+          type: string
+          nullable: true
+          description: Identifier of the participant's current connection.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (milliseconds) of when the participant connected.
+        channel:
+          type: string
+          description: The channel the participant is connected to.
+      required:
+      - id
+      - channel
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+  responses:
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 404
+            message: Not found.
+  securitySchemes:
+    clientId:
+      type: apiKey
+      in: header
+      name: client_id
+      description: Client ID issued from the SuperViz Dashboard under Developer > Keys. Sent on every REST request alongside the `secret` header.
+    secret:
+      type: apiKey
+      in: header
+      name: secret
+      description: Secret Key issued from the SuperViz Dashboard under Developer > Keys. Displayed only once at creation; store it securely and never commit it to version control.

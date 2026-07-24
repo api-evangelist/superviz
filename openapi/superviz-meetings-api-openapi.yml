@@ -1,0 +1,149 @@
+openapi: 3.0.3
+info:
+  title: SuperViz REST Channels Meetings API
+  description: 'Representative OpenAPI description of the SuperViz server-side REST API.
+
+
+    SuperViz is SDK-first: real-time collaboration and communication features (presence, realtime data channels, video huddle, contextual comments, mouse pointers) are implemented in the browser with the `@superviz/sdk` and `@superviz/react-sdk` client libraries, initialized with a developer key.
+
+
+    This REST API at `https://api.superviz.com` is the supporting server-side surface. It lets a backend read presence and participants, introspect channels, publish events into realtime channels, read room participants and contextual comments, and retrieve video meeting statistics. All REST requests authenticate with a Client ID and Secret Key issued from Dashboard > Developer > Keys, sent as the `client_id` and `secret` request headers.
+
+
+    Endpoints, paths, and field shapes here are modeled from the public SuperViz documentation at https://docs.superviz.com and are intended as a faithful, representative specification rather than an exhaustive dump of every field.'
+  version: '1.0'
+  contact:
+    name: SuperViz Support
+    url: https://docs.superviz.com
+  license:
+    name: SuperViz Terms of Service
+    url: https://superviz.com/terms
+servers:
+- url: https://api.superviz.com
+  description: SuperViz REST API base URL
+security:
+- clientId: []
+  secret: []
+tags:
+- name: Meetings
+  description: Video huddle / meeting statistics.
+paths:
+  /meetings/{meetingId}:
+    get:
+      operationId: getMeetingStats
+      tags:
+      - Meetings
+      summary: Get video meeting statistics
+      description: Retrieves statistics for a video huddle / meeting created with the Video SDK, including duration in minutes, recording minutes, price, and per-participant join detail. The same statistics payload is delivered via the MEETING_STATS webhook when a meeting ends.
+      parameters:
+      - name: meetingId
+        in: path
+        required: true
+        description: The identifier of the meeting.
+        schema:
+          type: string
+        example: meeting-01hxyz
+      responses:
+        '200':
+          description: Meeting statistics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 404
+            message: Not found.
+  schemas:
+    MeetingStats:
+      type: object
+      description: Statistics for a completed or in-progress video meeting.
+      properties:
+        uuid:
+          type: string
+        meetingId:
+          type: string
+        groupId:
+          type: string
+          nullable: true
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+          nullable: true
+        meetingMinutes:
+          type: number
+          description: Total meeting duration in minutes.
+        recordingMinutes:
+          type: number
+          description: Minutes of recording produced.
+        price:
+          type: number
+          description: Computed cost of the meeting.
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingParticipant'
+      required:
+      - meetingId
+    MeetingParticipant:
+      type: object
+      properties:
+        uuid:
+          type: string
+        name:
+          type: string
+        userId:
+          type: string
+          nullable: true
+        permission:
+          type: string
+          description: Permission level of the participant in the meeting.
+        joinedAt:
+          type: string
+          format: date-time
+      required:
+      - uuid
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+  securitySchemes:
+    clientId:
+      type: apiKey
+      in: header
+      name: client_id
+      description: Client ID issued from the SuperViz Dashboard under Developer > Keys. Sent on every REST request alongside the `secret` header.
+    secret:
+      type: apiKey
+      in: header
+      name: secret
+      description: Secret Key issued from the SuperViz Dashboard under Developer > Keys. Displayed only once at creation; store it securely and never commit it to version control.

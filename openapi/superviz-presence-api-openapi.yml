@@ -1,0 +1,130 @@
+openapi: 3.0.3
+info:
+  title: SuperViz REST Channels Presence API
+  description: 'Representative OpenAPI description of the SuperViz server-side REST API.
+
+
+    SuperViz is SDK-first: real-time collaboration and communication features (presence, realtime data channels, video huddle, contextual comments, mouse pointers) are implemented in the browser with the `@superviz/sdk` and `@superviz/react-sdk` client libraries, initialized with a developer key.
+
+
+    This REST API at `https://api.superviz.com` is the supporting server-side surface. It lets a backend read presence and participants, introspect channels, publish events into realtime channels, read room participants and contextual comments, and retrieve video meeting statistics. All REST requests authenticate with a Client ID and Secret Key issued from Dashboard > Developer > Keys, sent as the `client_id` and `secret` request headers.
+
+
+    Endpoints, paths, and field shapes here are modeled from the public SuperViz documentation at https://docs.superviz.com and are intended as a faithful, representative specification rather than an exhaustive dump of every field.'
+  version: '1.0'
+  contact:
+    name: SuperViz Support
+    url: https://docs.superviz.com
+  license:
+    name: SuperViz Terms of Service
+    url: https://superviz.com/terms
+servers:
+- url: https://api.superviz.com
+  description: SuperViz REST API base URL
+security:
+- clientId: []
+  secret: []
+tags:
+- name: Presence
+  description: Participants currently connected to realtime channels.
+paths:
+  /realtime/1.0/participants/{channel}:
+    get:
+      operationId: getChannelParticipants
+      tags:
+      - Presence
+      summary: Get participants connected to a channel
+      description: Returns the list of participants currently connected to the named realtime channel. This is the presence surface used to render "who is here" experiences from a backend.
+      parameters:
+      - name: channel
+        in: path
+        required: true
+        description: The name of the realtime channel to query.
+        schema:
+          type: string
+        example: my-channel
+      responses:
+        '200':
+          description: A list of connected participants.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Participant'
+              example:
+              - id: user-123
+                name: Ada Lovelace
+                connectionId: conn_01habc
+                timestamp: 1751328000000
+                channel: my-channel
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Participant:
+      type: object
+      description: A participant connected to a realtime channel.
+      properties:
+        id:
+          type: string
+          description: Participant identifier supplied when the SDK was initialized.
+        name:
+          type: string
+          description: Display name of the participant.
+        connectionId:
+          type: string
+          nullable: true
+          description: Identifier of the participant's current connection.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (milliseconds) of when the participant connected.
+        channel:
+          type: string
+          description: The channel the participant is connected to.
+      required:
+      - id
+      - channel
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+  responses:
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 404
+            message: Not found.
+  securitySchemes:
+    clientId:
+      type: apiKey
+      in: header
+      name: client_id
+      description: Client ID issued from the SuperViz Dashboard under Developer > Keys. Sent on every REST request alongside the `secret` header.
+    secret:
+      type: apiKey
+      in: header
+      name: secret
+      description: Secret Key issued from the SuperViz Dashboard under Developer > Keys. Displayed only once at creation; store it securely and never commit it to version control.

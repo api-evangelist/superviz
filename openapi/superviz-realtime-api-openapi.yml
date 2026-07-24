@@ -1,0 +1,134 @@
+openapi: 3.0.3
+info:
+  title: SuperViz REST Channels Realtime API
+  description: 'Representative OpenAPI description of the SuperViz server-side REST API.
+
+
+    SuperViz is SDK-first: real-time collaboration and communication features (presence, realtime data channels, video huddle, contextual comments, mouse pointers) are implemented in the browser with the `@superviz/sdk` and `@superviz/react-sdk` client libraries, initialized with a developer key.
+
+
+    This REST API at `https://api.superviz.com` is the supporting server-side surface. It lets a backend read presence and participants, introspect channels, publish events into realtime channels, read room participants and contextual comments, and retrieve video meeting statistics. All REST requests authenticate with a Client ID and Secret Key issued from Dashboard > Developer > Keys, sent as the `client_id` and `secret` request headers.
+
+
+    Endpoints, paths, and field shapes here are modeled from the public SuperViz documentation at https://docs.superviz.com and are intended as a faithful, representative specification rather than an exhaustive dump of every field.'
+  version: '1.0'
+  contact:
+    name: SuperViz Support
+    url: https://docs.superviz.com
+  license:
+    name: SuperViz Terms of Service
+    url: https://superviz.com/terms
+servers:
+- url: https://api.superviz.com
+  description: SuperViz REST API base URL
+security:
+- clientId: []
+  secret: []
+tags:
+- name: Realtime
+  description: Publishing events into realtime channels from a backend.
+paths:
+  /realtime/1.0/channels/{channel}/events:
+    post:
+      operationId: publishEvent
+      tags:
+      - Realtime
+      summary: Publish an event to a channel
+      description: Publishes (posts) an event with an arbitrary JSON payload to the named realtime channel. Connected SDK clients subscribed to that channel and event name receive the payload in real time. This is how a backend pushes synchronized data to clients.
+      parameters:
+      - name: channel
+        in: path
+        required: true
+        description: The name of the realtime channel to publish to.
+        schema:
+          type: string
+        example: my-channel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishEventRequest'
+            example:
+              name: price-update
+              data:
+                symbol: ACME
+                price: 42.5
+      responses:
+        '200':
+          description: Event accepted and published to the channel.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishEventResponse'
+              example:
+                success: true
+                channel: my-channel
+                name: price-update
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
+    BadRequest:
+      description: The request was malformed or a parameter was invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 400
+            message: Invalid request body.
+  schemas:
+    PublishEventResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        channel:
+          type: string
+        name:
+          type: string
+    PublishEventRequest:
+      type: object
+      description: Request body to publish an event to a channel.
+      properties:
+        name:
+          type: string
+          description: The event name subscribers listen for.
+        data:
+          description: Arbitrary JSON payload delivered to subscribers.
+      required:
+      - name
+      - data
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+  securitySchemes:
+    clientId:
+      type: apiKey
+      in: header
+      name: client_id
+      description: Client ID issued from the SuperViz Dashboard under Developer > Keys. Sent on every REST request alongside the `secret` header.
+    secret:
+      type: apiKey
+      in: header
+      name: secret
+      description: Secret Key issued from the SuperViz Dashboard under Developer > Keys. Displayed only once at creation; store it securely and never commit it to version control.
