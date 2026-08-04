@@ -1,0 +1,496 @@
+openapi: 3.0.3
+info:
+  title: SuperViz REST API
+  description: >-
+    Representative OpenAPI description of the SuperViz server-side REST API.
+
+
+    SuperViz is SDK-first: real-time collaboration and communication features
+    (presence, realtime data channels, video huddle, contextual comments, mouse
+    pointers) are implemented in the browser with the `@superviz/sdk` and
+    `@superviz/react-sdk` client libraries, initialized with a developer key.
+
+
+    This REST API at `https://api.superviz.com` is the supporting server-side
+    surface. It lets a backend read presence and participants, introspect
+    channels, publish events into realtime channels, read room participants and
+    contextual comments, and retrieve video meeting statistics. All REST
+    requests authenticate with a Client ID and Secret Key issued from
+    Dashboard > Developer > Keys, sent as the `client_id` and `secret` request
+    headers.
+
+
+    Endpoints, paths, and field shapes here are modeled from the public SuperViz
+    documentation at https://docs.superviz.com and are intended as a faithful,
+    representative specification rather than an exhaustive dump of every field.
+  version: '1.0'
+  contact:
+    name: SuperViz Support
+    url: https://docs.superviz.com
+  license:
+    name: SuperViz Terms of Service
+    url: https://superviz.com/terms
+servers:
+  - url: https://api.superviz.com
+    description: SuperViz REST API base URL
+security:
+  - clientId: []
+    secret: []
+tags:
+  - name: Presence
+    description: Participants currently connected to realtime channels.
+  - name: Channels
+    description: Realtime channels active for a room.
+  - name: Realtime
+    description: Publishing events into realtime channels from a backend.
+  - name: Rooms
+    description: Collaboration rooms and their participants.
+  - name: Comments
+    description: Contextual comments (annotations) created via the Collaboration SDK.
+  - name: Meetings
+    description: Video huddle / meeting statistics.
+paths:
+  /realtime/1.0/participants/{channel}:
+    get:
+      operationId: getChannelParticipants
+      tags:
+        - Presence
+      summary: Get participants connected to a channel
+      description: >-
+        Returns the list of participants currently connected to the named
+        realtime channel. This is the presence surface used to render "who is
+        here" experiences from a backend.
+      parameters:
+        - name: channel
+          in: path
+          required: true
+          description: The name of the realtime channel to query.
+          schema:
+            type: string
+          example: my-channel
+      responses:
+        '200':
+          description: A list of connected participants.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Participant'
+              example:
+                - id: user-123
+                  name: Ada Lovelace
+                  connectionId: conn_01habc
+                  timestamp: 1751328000000
+                  channel: my-channel
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /realtime/1.0/channels:
+    get:
+      operationId: listChannels
+      tags:
+        - Channels
+      summary: List realtime channels
+      description: >-
+        Lists the realtime channels that are active for the authenticated
+        account / room, so a backend can discover where presence and messages
+        are flowing.
+      responses:
+        '200':
+          description: A list of active channels.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Channel'
+              example:
+                - name: my-channel
+                  connections: 4
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /realtime/1.0/channels/{channel}/events:
+    post:
+      operationId: publishEvent
+      tags:
+        - Realtime
+      summary: Publish an event to a channel
+      description: >-
+        Publishes (posts) an event with an arbitrary JSON payload to the named
+        realtime channel. Connected SDK clients subscribed to that channel and
+        event name receive the payload in real time. This is how a backend
+        pushes synchronized data to clients.
+      parameters:
+        - name: channel
+          in: path
+          required: true
+          description: The name of the realtime channel to publish to.
+          schema:
+            type: string
+          example: my-channel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishEventRequest'
+            example:
+              name: price-update
+              data:
+                symbol: ACME
+                price: 42.5
+      responses:
+        '200':
+          description: Event accepted and published to the channel.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishEventResponse'
+              example:
+                success: true
+                channel: my-channel
+                name: price-update
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /rooms/{roomId}/participants:
+    get:
+      operationId: getRoomParticipants
+      tags:
+        - Rooms
+      summary: Get participants in a collaboration room
+      description: >-
+        Returns the participants associated with a collaboration room. List
+        responses use cursor-style pagination via the `limit` and `startAfter`
+        query parameters.
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          description: The identifier of the collaboration room.
+          schema:
+            type: string
+          example: room-abc
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of participants to return per page.
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 100
+        - name: startAfter
+          in: query
+          required: false
+          description: Pagination cursor - return participants after this participant id.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paginated list of room participants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedParticipants'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /rooms/{roomId}/comments:
+    get:
+      operationId: listRoomComments
+      tags:
+        - Comments
+      summary: List contextual comments for a room
+      description: >-
+        Returns the contextual comments (annotations pinned to elements of a web
+        application or 3D scene) created through the Collaboration SDK for the
+        given room.
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          description: The identifier of the collaboration room.
+          schema:
+            type: string
+          example: room-abc
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 100
+        - name: startAfter
+          in: query
+          required: false
+          description: Pagination cursor - return comments after this comment id.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paginated list of contextual comments.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedComments'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /meetings/{meetingId}:
+    get:
+      operationId: getMeetingStats
+      tags:
+        - Meetings
+      summary: Get video meeting statistics
+      description: >-
+        Retrieves statistics for a video huddle / meeting created with the Video
+        SDK, including duration in minutes, recording minutes, price, and
+        per-participant join detail. The same statistics payload is delivered
+        via the MEETING_STATS webhook when a meeting ends.
+      parameters:
+        - name: meetingId
+          in: path
+          required: true
+          description: The identifier of the meeting.
+          schema:
+            type: string
+          example: meeting-01hxyz
+      responses:
+        '200':
+          description: Meeting statistics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    clientId:
+      type: apiKey
+      in: header
+      name: client_id
+      description: >-
+        Client ID issued from the SuperViz Dashboard under Developer > Keys.
+        Sent on every REST request alongside the `secret` header.
+    secret:
+      type: apiKey
+      in: header
+      name: secret
+      description: >-
+        Secret Key issued from the SuperViz Dashboard under Developer > Keys.
+        Displayed only once at creation; store it securely and never commit it
+        to version control.
+  responses:
+    BadRequest:
+      description: The request was malformed or a parameter was invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 400
+            message: Invalid request body.
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 404
+            message: Not found.
+  schemas:
+    Participant:
+      type: object
+      description: A participant connected to a realtime channel.
+      properties:
+        id:
+          type: string
+          description: Participant identifier supplied when the SDK was initialized.
+        name:
+          type: string
+          description: Display name of the participant.
+        connectionId:
+          type: string
+          nullable: true
+          description: Identifier of the participant's current connection.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (milliseconds) of when the participant connected.
+        channel:
+          type: string
+          description: The channel the participant is connected to.
+      required:
+        - id
+        - channel
+    Channel:
+      type: object
+      description: A realtime channel active for the account or room.
+      properties:
+        name:
+          type: string
+          description: The channel name.
+        connections:
+          type: integer
+          description: Number of connections currently on the channel.
+      required:
+        - name
+    PublishEventRequest:
+      type: object
+      description: Request body to publish an event to a channel.
+      properties:
+        name:
+          type: string
+          description: The event name subscribers listen for.
+        data:
+          description: Arbitrary JSON payload delivered to subscribers.
+      required:
+        - name
+        - data
+    PublishEventResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        channel:
+          type: string
+        name:
+          type: string
+    Comment:
+      type: object
+      description: A contextual comment (annotation) created via the Collaboration SDK.
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+          description: Body of the comment.
+        participantId:
+          type: string
+          description: Identifier of the participant who authored the comment.
+        position:
+          type: object
+          description: >-
+            Anchor of the comment within the host application or 3D scene
+            (implementation-specific coordinates).
+          additionalProperties: true
+        resolved:
+          type: boolean
+          description: Whether the comment thread has been resolved.
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - text
+    MeetingStats:
+      type: object
+      description: Statistics for a completed or in-progress video meeting.
+      properties:
+        uuid:
+          type: string
+        meetingId:
+          type: string
+        groupId:
+          type: string
+          nullable: true
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+          nullable: true
+        meetingMinutes:
+          type: number
+          description: Total meeting duration in minutes.
+        recordingMinutes:
+          type: number
+          description: Minutes of recording produced.
+        price:
+          type: number
+          description: Computed cost of the meeting.
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingParticipant'
+      required:
+        - meetingId
+    MeetingParticipant:
+      type: object
+      properties:
+        uuid:
+          type: string
+        name:
+          type: string
+        userId:
+          type: string
+          nullable: true
+        permission:
+          type: string
+          description: Permission level of the participant in the meeting.
+        joinedAt:
+          type: string
+          format: date-time
+      required:
+        - uuid
+    PaginatedParticipants:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Participant'
+        limit:
+          type: integer
+        next:
+          type: string
+          nullable: true
+          description: Cursor to pass as `startAfter` to fetch the next page, or null.
+      required:
+        - data
+    PaginatedComments:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        limit:
+          type: integer
+        next:
+          type: string
+          nullable: true
+          description: Cursor to pass as `startAfter` to fetch the next page, or null.
+      required:
+        - data
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+        - statusCode
+        - message

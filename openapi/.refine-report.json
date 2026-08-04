@@ -1,0 +1,24 @@
+{
+  "provider": "superviz",
+  "sources": [
+    "superviz-channels-api-openapi.yml",
+    "superviz-comments-api-openapi.yml",
+    "superviz-meetings-api-openapi.yml",
+    "superviz-presence-api-openapi.yml",
+    "superviz-realtime-api-openapi.yml",
+    "superviz-rooms-api-openapi.yml"
+  ],
+  "outputs": [
+    "superviz-channels-api-openapi.yml",
+    "superviz-comments-api-openapi.yml",
+    "superviz-meetings-api-openapi.yml",
+    "superviz-presence-api-openapi.yml",
+    "superviz-realtime-api-openapi.yml",
+    "superviz-rooms-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
