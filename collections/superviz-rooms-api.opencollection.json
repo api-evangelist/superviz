@@ -1,0 +1,57 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SuperViz REST Channels Rooms API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "client_id",
+      "value": "{{client_id}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Rooms",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get participants in a collaboration room",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.superviz.com/rooms/:roomId/participants",
+            "params": [
+              {
+                "name": "roomId",
+                "value": "room-abc",
+                "type": "path",
+                "description": "The identifier of the collaboration room."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of participants to return per page."
+              },
+              {
+                "name": "startAfter",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor - return participants after this participant id."
+              }
+            ]
+          },
+          "docs": "Returns the participants associated with a collaboration room. List responses use cursor-style pagination via the `limit` and `startAfter` query parameters."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

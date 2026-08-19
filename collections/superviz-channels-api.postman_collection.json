@@ -1,0 +1,176 @@
+{
+  "item": [
+    {
+      "id": "479b450d-1bf1-40f9-95f6-04ba14088367",
+      "name": "Channels",
+      "description": {
+        "content": "Realtime channels active for a room.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7608ed34-0ad2-462a-926e-e96dbeffb6d3",
+          "name": "List realtime channels",
+          "request": {
+            "name": "List realtime channels",
+            "description": {
+              "content": "Lists the realtime channels that are active for the authenticated account / room, so a backend can discover where presence and messages are flowing.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "realtime",
+                "1.0",
+                "channels"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7e90a16b-d2f1-427b-a10d-24a9c9e0f5dd",
+              "name": "A list of active channels.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "realtime",
+                    "1.0",
+                    "channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "client_id",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"name\": \"my-channel\",\n    \"connections\": 4\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8811bda3-249a-4e5b-a113-3810cc0fb54c",
+              "name": "Missing or invalid client_id / secret credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "realtime",
+                    "1.0",
+                    "channels"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "client_id",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"statusCode\": 401,\n  \"message\": \"Unauthorized.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.superviz.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "client_id"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9a1f48b5-f977-43c1-befa-256767e7c71f",
+    "name": "SuperViz REST Channels API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative OpenAPI description of the SuperViz server-side REST API.\n\nSuperViz is SDK-first: real-time collaboration and communication features (presence, realtime data channels, video huddle, contextual comments, mouse pointers) are implemented in the browser with the `@superviz/sdk` and `@superviz/react-sdk` client libraries, initialized with a developer key.\n\nThis REST API at `https://api.superviz.com` is the supporting server-side surface. It lets a backend read presence and participants, introspect channels, publish events into realtime channels, read room participants and contextual comments, and retrieve video meeting statistics. All REST requests authenticate with a Client ID and Secret Key issued from Dashboard > Developer > Keys, sent as the `client_id` and `secret` request headers.\n\nEndpoints, paths, and field shapes here are modeled from the public SuperViz documentation at https://docs.superviz.com and are intended as a faithful, representative specification rather than an exhaustive dump of every field.\n\nContact Support:\n Name: SuperViz Support",
+      "type": "text/plain"
+    }
+  }
+}

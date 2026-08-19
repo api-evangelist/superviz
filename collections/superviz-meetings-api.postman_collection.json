@@ -1,0 +1,249 @@
+{
+  "item": [
+    {
+      "id": "f0b265be-d005-4bb6-aa2f-d4621edaa7ae",
+      "name": "Meetings",
+      "description": {
+        "content": "Video huddle / meeting statistics.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7c407e51-84ab-42ab-9138-2d245fefbdf2",
+          "name": "Get video meeting statistics",
+          "request": {
+            "name": "Get video meeting statistics",
+            "description": {
+              "content": "Retrieves statistics for a video huddle / meeting created with the Video SDK, including duration in minutes, recording minutes, price, and per-participant join detail. The same statistics payload is delivered via the MEETING_STATS webhook when a meeting ends.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "meetings",
+                ":meetingId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "meetingId",
+                  "description": "(Required) The identifier of the meeting."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "442eb00d-2891-497d-a5d7-4a82ffb18cd4",
+              "name": "Meeting statistics.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "meetings",
+                    ":meetingId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "meetingId",
+                      "description": "(Required) The identifier of the meeting."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "client_id",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"meetingId\": \"string\",\n  \"uuid\": \"string\",\n  \"groupId\": \"string\",\n  \"startedAt\": \"1980-03-22T22:19:00.042Z\",\n  \"endedAt\": \"1994-06-07T18:12:19.877Z\",\n  \"meetingMinutes\": 4447.100192580452,\n  \"recordingMinutes\": 3538.8728027044335,\n  \"price\": 8935.768241183481,\n  \"participants\": [\n    {\n      \"uuid\": \"string\",\n      \"name\": \"string\",\n      \"userId\": \"string\",\n      \"permission\": \"string\",\n      \"joinedAt\": \"1987-11-24T22:07:03.824Z\"\n    },\n    {\n      \"uuid\": \"string\",\n      \"name\": \"string\",\n      \"userId\": \"string\",\n      \"permission\": \"string\",\n      \"joinedAt\": \"1953-06-27T04:02:15.924Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "05d5cc29-e209-448d-bbae-a5ba546d24b5",
+              "name": "Missing or invalid client_id / secret credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "meetings",
+                    ":meetingId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "meetingId",
+                      "description": "(Required) The identifier of the meeting."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "client_id",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"statusCode\": 401,\n  \"message\": \"Unauthorized.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d2de4c61-0ea3-4541-bae8-4e6cf629e7a6",
+              "name": "The requested resource does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "meetings",
+                    ":meetingId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "meetingId",
+                      "description": "(Required) The identifier of the meeting."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "client_id",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"statusCode\": 404,\n  \"message\": \"Not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.superviz.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "client_id"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "0abf58ee-d71f-43bc-8aa3-5b4d31daa843",
+    "name": "SuperViz REST Channels Meetings API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative OpenAPI description of the SuperViz server-side REST API.\n\nSuperViz is SDK-first: real-time collaboration and communication features (presence, realtime data channels, video huddle, contextual comments, mouse pointers) are implemented in the browser with the `@superviz/sdk` and `@superviz/react-sdk` client libraries, initialized with a developer key.\n\nThis REST API at `https://api.superviz.com` is the supporting server-side surface. It lets a backend read presence and participants, introspect channels, publish events into realtime channels, read room participants and contextual comments, and retrieve video meeting statistics. All REST requests authenticate with a Client ID and Secret Key issued from Dashboard > Developer > Keys, sent as the `client_id` and `secret` request headers.\n\nEndpoints, paths, and field shapes here are modeled from the public SuperViz documentation at https://docs.superviz.com and are intended as a faithful, representative specification rather than an exhaustive dump of every field.\n\nContact Support:\n Name: SuperViz Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,293 @@
+{
+  "item": [
+    {
+      "id": "2e275cd4-7a6c-43b1-9b40-8b939887dbab",
+      "name": "Rooms",
+      "description": {
+        "content": "Collaboration rooms and their participants.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "64dd35d1-cee6-4134-a7ff-9307ce132646",
+          "name": "Get participants in a collaboration room",
+          "request": {
+            "name": "Get participants in a collaboration room",
+            "description": {
+              "content": "Returns the participants associated with a collaboration room. List responses use cursor-style pagination via the `limit` and `startAfter` query parameters.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "rooms",
+                ":roomId",
+                "participants"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Maximum number of participants to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "startAfter",
+                  "value": "<string>",
+                  "description": "Pagination cursor - return participants after this participant id."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "roomId",
+                  "description": "(Required) The identifier of the collaboration room."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2c408544-2268-4969-9283-e7d40199eeae",
+              "name": "A paginated list of room participants.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "rooms",
+                    ":roomId",
+                    "participants"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "startAfter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "roomId",
+                      "description": "(Required) The identifier of the collaboration room."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "client_id",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"channel\": \"string\",\n      \"name\": \"string\",\n      \"connectionId\": \"string\",\n      \"timestamp\": 9532\n    },\n    {\n      \"id\": \"string\",\n      \"channel\": \"string\",\n      \"name\": \"string\",\n      \"connectionId\": \"string\",\n      \"timestamp\": 7646\n    }\n  ],\n  \"limit\": 9076,\n  \"next\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5bbfb33f-0d20-4c00-bb7d-b5aec04bd4a6",
+              "name": "Missing or invalid client_id / secret credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "rooms",
+                    ":roomId",
+                    "participants"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "startAfter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "roomId",
+                      "description": "(Required) The identifier of the collaboration room."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "client_id",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"statusCode\": 401,\n  \"message\": \"Unauthorized.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f30a4e93-7bc6-438c-a4ae-7ab39458f85b",
+              "name": "The requested resource does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "rooms",
+                    ":roomId",
+                    "participants"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "startAfter",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "roomId",
+                      "description": "(Required) The identifier of the collaboration room."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "client_id",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"statusCode\": 404,\n  \"message\": \"Not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.superviz.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "client_id"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "25dc7acd-c16e-4a15-b0da-07413bf355fb",
+    "name": "SuperViz REST Channels Rooms API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative OpenAPI description of the SuperViz server-side REST API.\n\nSuperViz is SDK-first: real-time collaboration and communication features (presence, realtime data channels, video huddle, contextual comments, mouse pointers) are implemented in the browser with the `@superviz/sdk` and `@superviz/react-sdk` client libraries, initialized with a developer key.\n\nThis REST API at `https://api.superviz.com` is the supporting server-side surface. It lets a backend read presence and participants, introspect channels, publish events into realtime channels, read room participants and contextual comments, and retrieve video meeting statistics. All REST requests authenticate with a Client ID and Secret Key issued from Dashboard > Developer > Keys, sent as the `client_id` and `secret` request headers.\n\nEndpoints, paths, and field shapes here are modeled from the public SuperViz documentation at https://docs.superviz.com and are intended as a faithful, representative specification rather than an exhaustive dump of every field.\n\nContact Support:\n Name: SuperViz Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SuperViz REST Channels Meetings API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "client_id",
+      "value": "{{client_id}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Meetings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get video meeting statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.superviz.com/meetings/:meetingId",
+            "params": [
+              {
+                "name": "meetingId",
+                "value": "meeting-01hxyz",
+                "type": "path",
+                "description": "The identifier of the meeting."
+              }
+            ]
+          },
+          "docs": "Retrieves statistics for a video huddle / meeting created with the Video SDK, including duration in minutes, recording minutes, price, and per-participant join detail. The same statistics payload is delivered via the MEETING_STATS webhook when a meeting ends."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

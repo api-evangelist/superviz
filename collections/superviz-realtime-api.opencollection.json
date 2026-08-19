@@ -1,0 +1,49 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SuperViz REST Channels Realtime API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "client_id",
+      "value": "{{client_id}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Realtime",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Publish an event to a channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.superviz.com/realtime/1.0/channels/:channel/events",
+            "params": [
+              {
+                "name": "channel",
+                "value": "my-channel",
+                "type": "path",
+                "description": "The name of the realtime channel to publish to."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Publishes (posts) an event with an arbitrary JSON payload to the named realtime channel. Connected SDK clients subscribed to that channel and event name receive the payload in real time. This is how a backend pushes synchronized data to clients."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

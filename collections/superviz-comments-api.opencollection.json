@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "SuperViz REST Channels Comments API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "client_id",
+      "value": "{{client_id}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Comments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List contextual comments for a room",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.superviz.com/rooms/:roomId/comments",
+            "params": [
+              {
+                "name": "roomId",
+                "value": "room-abc",
+                "type": "path",
+                "description": "The identifier of the collaboration room."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "startAfter",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor - return comments after this comment id."
+              }
+            ]
+          },
+          "docs": "Returns the contextual comments (annotations pinned to elements of a web application or 3D scene) created through the Collaboration SDK for the given room."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
