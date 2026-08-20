@@ -23,6 +23,14 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/superviz.png
 tags:
+- Real-Time
+- Collaboration
+- Presence
+- Synchronization
+- Video
+- WebRTC
+- SDK
+tags_raw:
 - Real Time
 - Collaboration
 - Presence
@@ -144,6 +152,8 @@ apis:
   humanURL: https://docs.superviz.com/realtime/1.0/rest-api/presence
   baseURL: https://api.superviz.com
   tags:
+  - Real-Time
+  tags_raw:
   - Realtime
   properties:
   - type: OpenAPI
