@@ -8,6 +8,17 @@ description: SuperViz provides real-time collaboration and data-synchronization 
   and @superviz/react-sdk initialized with a developer key), supported by a REST API
   at api.superviz.com for participants, presence, channels, rooms, comments, and
   meetings, an event-driven realtime channel API, and webhooks.
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: true
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
