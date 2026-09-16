@@ -2,12 +2,11 @@ aid: superviz
 url: https://raw.githubusercontent.com/api-evangelist/superviz/refs/heads/main/apis.yml
 name: SuperViz
 kind: company
-description: SuperViz provides real-time collaboration and data-synchronization infrastructure
-  for web applications - presence, realtime data channels, video huddle/meetings,
-  contextual comments, and mouse pointers. The product is SDK-first (@superviz/sdk
-  and @superviz/react-sdk initialized with a developer key), supported by a REST API
-  at api.superviz.com for participants, presence, channels, rooms, comments, and
-  meetings, an event-driven realtime channel API, and webhooks.
+description: SuperViz provides real-time collaboration and data-synchronization infrastructure for web
+  applications - presence, realtime data channels, video huddle/meetings, contextual comments, and mouse
+  pointers. The product is SDK-first (@superviz/sdk and @superviz/react-sdk initialized with a developer
+  key), supported by a REST API at api.superviz.com for participants, presence, channels, rooms, comments,
+  and meetings, an event-driven realtime channel API, and webhooks.
 deliveryModel:
   model: unknown
   open_source: false
@@ -50,7 +49,7 @@ tags_raw:
 - WebRTC
 - SDK
 created: '2026-07-01'
-modified: '2026-07-01'
+modified: '2026-09-16'
 specificationVersion: '0.23'
 apis:
 - aid: superviz:superviz-channels-api
@@ -212,30 +211,16 @@ apis:
   - type: Documentation
     url: https://docs.superviz.com/getting-started/setting-up-your-account
 common:
-- type: GitHubOrganization
-  url: https://github.com/SuperViz
-- type: LinkedIn
-  url: https://www.linkedin.com/company/superviz
 - type: Website
-  url: https://superviz.com/
-- type: Documentation
-  url: https://docs.superviz.com
-- type: Plans
-  url: plans/superviz-plans-pricing.yml
-- type: RateLimits
-  url: rate-limits/superviz-rate-limits.yml
-- type: FinOps
-  url: finops/superviz-finops.yml
+  url: https://superviz.com
+- type: AgenticAccess
+  url: agentic-access/superviz-agentic-access.yml
+- type: DomainSecurity
+  url: security/superviz-domain-security.yml
+- type: Authentication
+  url: authentication/superviz-authentication.yml
+- url: https://superviz.com/blog
+  type: Blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
-
-common:
-  - type: AgenticAccess
-    url: agentic-access/superviz-agentic-access.yml
-  - type: DomainSecurity
-    url: security/superviz-domain-security.yml
-  - type: Authentication
-    url: authentication/superviz-authentication.yml
-  - url: https://superviz.com/blog
-    type: Blog
