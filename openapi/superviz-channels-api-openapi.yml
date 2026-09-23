@@ -1,16 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: SuperViz REST Channels API
-  description: 'Representative OpenAPI description of the SuperViz server-side REST API.
-
-
-    SuperViz is SDK-first: real-time collaboration and communication features (presence, realtime data channels, video huddle, contextual comments, mouse pointers) are implemented in the browser with the `@superviz/sdk` and `@superviz/react-sdk` client libraries, initialized with a developer key.
-
-
-    This REST API at `https://api.superviz.com` is the supporting server-side surface. It lets a backend read presence and participants, introspect channels, publish events into realtime channels, read room participants and contextual comments, and retrieve video meeting statistics. All REST requests authenticate with a Client ID and Secret Key issued from Dashboard > Developer > Keys, sent as the `client_id` and `secret` request headers.
-
-
-    Endpoints, paths, and field shapes here are modeled from the public SuperViz documentation at https://docs.superviz.com and are intended as a faithful, representative specification rather than an exhaustive dump of every field.'
+  description: Representative OpenAPI description of the SuperViz server-side REST API.
   version: '1.0'
   contact:
     name: SuperViz Support
@@ -50,27 +41,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid client_id / secret credentials.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 401
-            message: Unauthorized.
   schemas:
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-      required:
-      - statusCode
-      - message
     Channel:
       type: object
       description: A realtime channel active for the account or room.
@@ -83,6 +54,26 @@ components:
           description: Number of connections currently on the channel.
       required:
       - name
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+  responses:
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
   securitySchemes:
     clientId:
       type: apiKey
