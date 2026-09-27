@@ -61,26 +61,26 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
+    BadRequest:
+      description: The request was malformed or a parameter was invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 400
+            message: Invalid request body.
   schemas:
-    PublishEventResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        channel:
-          type: string
-        name:
-          type: string
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-      required:
-      - statusCode
-      - message
     PublishEventRequest:
       type: object
       description: Request body to publish an event to a channel.
@@ -93,25 +93,25 @@ components:
       required:
       - name
       - data
-  responses:
-    BadRequest:
-      description: The request was malformed or a parameter was invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 400
-            message: Invalid request body.
-    Unauthorized:
-      description: Missing or invalid client_id / secret credentials.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 401
-            message: Unauthorized.
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+    PublishEventResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        channel:
+          type: string
+        name:
+          type: string
   securitySchemes:
     clientId:
       type: apiKey
