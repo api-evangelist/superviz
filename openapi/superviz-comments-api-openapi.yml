@@ -61,15 +61,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    Unauthorized:
-      description: Missing or invalid client_id / secret credentials.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 401
-            message: Unauthorized.
     NotFound:
       description: The requested resource does not exist.
       content:
@@ -79,6 +70,15 @@ components:
           example:
             statusCode: 404
             message: Not found.
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
   schemas:
     PaginatedComments:
       type: object
@@ -96,6 +96,16 @@ components:
           description: Cursor to pass as `startAfter` to fetch the next page, or null.
       required:
       - data
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
     Comment:
       type: object
       description: A contextual comment (annotation) created via the Collaboration SDK.
@@ -121,16 +131,6 @@ components:
       required:
       - id
       - text
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-      required:
-      - statusCode
-      - message
   securitySchemes:
     clientId:
       type: apiKey

@@ -91,15 +91,6 @@ components:
       - statusCode
       - message
   responses:
-    Unauthorized:
-      description: Missing or invalid client_id / secret credentials.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 401
-            message: Unauthorized.
     NotFound:
       description: The requested resource does not exist.
       content:
@@ -109,6 +100,15 @@ components:
           example:
             statusCode: 404
             message: Not found.
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
   securitySchemes:
     clientId:
       type: apiKey

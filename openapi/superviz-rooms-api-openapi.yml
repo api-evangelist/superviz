@@ -62,31 +62,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Participant:
-      type: object
-      description: A participant connected to a realtime channel.
-      properties:
-        id:
-          type: string
-          description: Participant identifier supplied when the SDK was initialized.
-        name:
-          type: string
-          description: Display name of the participant.
-        connectionId:
-          type:
-          - string
-          - 'null'
-          description: Identifier of the participant's current connection.
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix timestamp (milliseconds) of when the participant connected.
-        channel:
-          type: string
-          description: The channel the participant is connected to.
-      required:
-      - id
-      - channel
     PaginatedParticipants:
       type: object
       properties:
@@ -113,16 +88,32 @@ components:
       required:
       - statusCode
       - message
+    Participant:
+      type: object
+      description: A participant connected to a realtime channel.
+      properties:
+        id:
+          type: string
+          description: Participant identifier supplied when the SDK was initialized.
+        name:
+          type: string
+          description: Display name of the participant.
+        connectionId:
+          type:
+          - string
+          - 'null'
+          description: Identifier of the participant's current connection.
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp (milliseconds) of when the participant connected.
+        channel:
+          type: string
+          description: The channel the participant is connected to.
+      required:
+      - id
+      - channel
   responses:
-    Unauthorized:
-      description: Missing or invalid client_id / secret credentials.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 401
-            message: Unauthorized.
     NotFound:
       description: The requested resource does not exist.
       content:
@@ -132,6 +123,15 @@ components:
           example:
             statusCode: 404
             message: Not found.
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
   securitySchemes:
     clientId:
       type: apiKey
