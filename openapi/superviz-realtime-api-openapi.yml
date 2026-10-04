@@ -61,6 +61,38 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  schemas:
+    PublishEventRequest:
+      type: object
+      description: Request body to publish an event to a channel.
+      properties:
+        name:
+          type: string
+          description: The event name subscribers listen for.
+        data:
+          description: Arbitrary JSON payload delivered to subscribers.
+      required:
+      - name
+      - data
+    PublishEventResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        channel:
+          type: string
+        name:
+          type: string
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
   responses:
     BadRequest:
       description: The request was malformed or a parameter was invalid.
@@ -80,38 +112,6 @@ components:
           example:
             statusCode: 401
             message: Unauthorized.
-  schemas:
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-      required:
-      - statusCode
-      - message
-    PublishEventResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        channel:
-          type: string
-        name:
-          type: string
-    PublishEventRequest:
-      type: object
-      description: Request body to publish an event to a channel.
-      properties:
-        name:
-          type: string
-          description: The event name subscribers listen for.
-        data:
-          description: Arbitrary JSON payload delivered to subscribers.
-      required:
-      - name
-      - data
   securitySchemes:
     clientId:
       type: apiKey

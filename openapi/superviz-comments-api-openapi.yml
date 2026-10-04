@@ -61,15 +61,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   responses:
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 404
-            message: Not found.
     Unauthorized:
       description: Missing or invalid client_id / secret credentials.
       content:
@@ -79,33 +70,16 @@ components:
           example:
             statusCode: 401
             message: Unauthorized.
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 404
+            message: Not found.
   schemas:
-    PaginatedComments:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Comment'
-        limit:
-          type: integer
-        next:
-          type:
-          - string
-          - 'null'
-          description: Cursor to pass as `startAfter` to fetch the next page, or null.
-      required:
-      - data
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-      required:
-      - statusCode
-      - message
     Comment:
       type: object
       description: A contextual comment (annotation) created via the Collaboration SDK.
@@ -131,6 +105,32 @@ components:
       required:
       - id
       - text
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
+    PaginatedComments:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        limit:
+          type: integer
+        next:
+          type:
+          - string
+          - 'null'
+          description: Cursor to pass as `startAfter` to fetch the next page, or null.
+      required:
+      - data
   securitySchemes:
     clientId:
       type: apiKey

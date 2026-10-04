@@ -46,6 +46,25 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 404
+            message: Not found.
   schemas:
     MeetingStats:
       type: object
@@ -82,16 +101,6 @@ components:
             $ref: '#/components/schemas/MeetingParticipant'
       required:
       - meetingId
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-      required:
-      - statusCode
-      - message
     MeetingParticipant:
       type: object
       properties:
@@ -111,25 +120,16 @@ components:
           format: date-time
       required:
       - uuid
-  responses:
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 404
-            message: Not found.
-    Unauthorized:
-      description: Missing or invalid client_id / secret credentials.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 401
-            message: Unauthorized.
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
   securitySchemes:
     clientId:
       type: apiKey

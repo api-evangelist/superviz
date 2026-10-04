@@ -61,6 +61,25 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid client_id / secret credentials.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Unauthorized.
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 404
+            message: Not found.
   schemas:
     PaginatedParticipants:
       type: object
@@ -113,25 +132,6 @@ components:
       required:
       - id
       - channel
-  responses:
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 404
-            message: Not found.
-    Unauthorized:
-      description: Missing or invalid client_id / secret credentials.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 401
-            message: Unauthorized.
   securitySchemes:
     clientId:
       type: apiKey

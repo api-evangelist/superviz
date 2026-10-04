@@ -55,6 +55,16 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+      required:
+      - statusCode
+      - message
     Participant:
       type: object
       description: A participant connected to a realtime channel.
@@ -80,26 +90,7 @@ components:
       required:
       - id
       - channel
-    Error:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-        message:
-          type: string
-      required:
-      - statusCode
-      - message
   responses:
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            statusCode: 404
-            message: Not found.
     Unauthorized:
       description: Missing or invalid client_id / secret credentials.
       content:
@@ -109,6 +100,15 @@ components:
           example:
             statusCode: 401
             message: Unauthorized.
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 404
+            message: Not found.
   securitySchemes:
     clientId:
       type: apiKey
